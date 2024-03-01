@@ -1,8 +1,8 @@
 db.zips.aggregate([
     {
-        "$group": {
-            "_id": "$city",
-            "totalZips":{"$count":{ }}
+        $group: {
+            _id: "$city",
+            totalZips:{"$count":{ }}
         }
     }
 ])
