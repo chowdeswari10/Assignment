@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        p {
+            text-align: center;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"],
+        input[type="button"],
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: calc(100% - 20px);
+        }
+        input[type="submit"]:hover,
+        input[type="button"]:hover,
+        button:hover {
+            background-color: #45a049;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Home Page</h1>
+    <p>This is the home page.</p>
+    <a href="/add_user"><button>Add User</button></a>
+    <a href="/add_product"><button>Add Product</button></a>
+
+    <h1>Search Product</h1>
+    <form id="searchForm">
+        <label for="search">Search Product:</label><br>
+        <input type="text" id="search" name="search"><br><br>
+        <input type="button" value="Search" onclick="searchProduct()">
+    </form>
+
+    <h2>Delete Product</h2>
+    <form id="deleteForm">
+        <label for="product_name">Product Name:</label><br>
+        <input type="text" id="product_name" name="product_name" placeholder="Enter Product Name"><br><br>
+        <input type="button" value="Delete Product" onclick="deleteProduct()">
+    </form>
+    
+    <script>
+        function deleteProduct() {
+            var productName = document.getElementById("product_name").value;
+            // Send a DELETE request using AJAX
+            $.ajax({
+                type: 'DELETE',
+                url: '/delete_product/' + productName,
+                success: function(response) {
+                    // Display success message
+                    alert("Product deleted successfully");
+                    // Redirect to home page after successful deletion
+                    window.location.href = "/home";
+                },
+                error: function(xhr, status, error) {
+                    alert("Error: " + xhr.responseText); // Display error message
+                }
+            });
+        }
+    </script>
+
+    <h2>Update Password</h2>
+    <form id="password-update-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="new_password">New Password:</label>
+        <input type="password" id="new_password" name="new_password" required><br><br>
+        
+        <button type="submit">Update Password</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#password-update-form').submit(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                // Get form data
+                var formData = {
+                    'username': $('#username').val(),
+                    'new_password': $('#new_password').val()
+                };
+                
+                // Send POST request to update password
+                $.ajax({
+                    type: 'POST',
+                    url: '/update_password',
+                    data: formData,
+                    success: function(response) {
+                        alert(response.message); // Display success message
+                        // Optionally, you can reload the page or perform other actions
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Error: " + xhr.responseText); // Display error message
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function searchProduct() {
+            var searchQuery = document.getElementById("search").value;
+            window.location.href = "/search_product?search=" + searchQuery;
+        }
+    </script>
+</body>
+</html>
